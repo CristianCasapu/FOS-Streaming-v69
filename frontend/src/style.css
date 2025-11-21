@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+/* Custom styles */
+:root {
+  --primary-color: #2c3e50;
+  --success-color: #26B99A;
+  --info-color: #3498DB;
+  --warning-color: #F39C12;
+  --danger-color: #E74C3C;
+}
+
+body {
+  font-family: "Helvetica Neue", Roboto, Arial, sans-serif;
+  font-size: 14px;
+  color: #73879C;
+  background: #F7F7F7;
+}
+
+/* Dashboard specific styles */
+.tile_stats_count {
+  border-bottom: 1px solid #D9DEE4;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tile_stats_count:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.count {
+  font-size: 30px;
+  line-height: 47px;
+  font-weight: 600;
+  color: var(--success-color);
+}
+
+.count_top {
+  font-size: 11px;
+  font-weight: 400;
+  margin-top: 7px;
+}

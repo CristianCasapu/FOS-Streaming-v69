@@ -96,7 +96,7 @@ if (isset($_POST['submit'])) {
                         <div class="clearfix"></div>
                         <br/>
                         <div>
-                            <p>&copy;2023 All Rights Reserved <a href="https://github.com/theraw/FOS-Streaming-v69" target="_blank">FOS-Streaming</a></p>
+                            <p>&copy;2023 All Rights Reserved <a href="https://github.com/theraw/FOS-Streaming-v70" target="_blank">FOS-Streaming</a></p>
                         </div>
                     </div>
                 </form>

@@ -9,7 +9,7 @@ logincheck();
 $settings = Setting::first();
 if (is_null($settings)) {
     $settings = new Setting;
-    $settings->webip = $_SERVER['SERVER_ADDR'];
+    $settings->webip = $_SERVER['SERVER_ADDR'] ?? '127.0.0.1';
     $settings->webport = 8000;
     $settings->save();
 }
@@ -61,8 +61,7 @@ $mem['count'] = $mem_usage;
 $mem['total'] = $mem_total;
 
 
-echo $template->view()
-    ->make('dashboard')
+echo $template->view()->make('dashboard')
     ->with('all', $all)
     ->with('online', $online)
     ->with('offline', $offline)

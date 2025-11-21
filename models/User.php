@@ -5,7 +5,7 @@ class User extends FosStreaming {
 
     public function categories()
     {
-        return $this->belongsToMany('Category');
+        return $this->belongsToMany(Category::class);
     }
     
     public function getCategoryNamesAttribute()
@@ -23,11 +23,11 @@ class User extends FosStreaming {
 
     public function activity()
     {
-        return $this->hasMany('Activity');
+        return $this->hasMany(Activity::class);
     }
 
     public function laststream()
     {
-        return $this->hasOne('Stream', 'id', 'last_stream');
+        return $this->hasOne(Stream::class, 'id', 'last_stream');
     }
 }

@@ -31,7 +31,8 @@ if (isset($_POST['submit'])) {
     $setting->save();
 
     if ($port) {
-        die("Restart nginx and go to the following url: http://" . $_SERVER['SERVER_ADDR'] . ":" . $_POST['webport'] . "/settings.php");
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        die("Restart nginx and go to the following url: " . $protocol . "://" . $_SERVER['SERVER_ADDR'] . ":" . $_POST['webport'] . "/settings.php");
     } else {
         redirect("settings.php", 1000);
     }

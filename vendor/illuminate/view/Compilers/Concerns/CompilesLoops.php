@@ -2,6 +2,8 @@
 
 namespace Illuminate\View\Compilers\Concerns;
 
+use Illuminate\Contracts\View\ViewCompilationException;
+
 trait CompilesLoops
 {
     /**
@@ -16,12 +18,18 @@ trait CompilesLoops
      *
      * @param  string  $expression
      * @return string
+     *
+     * @throws \Illuminate\Contracts\View\ViewCompilationException
      */
     protected function compileForelse($expression)
     {
         $empty = '$__empty_'.++$this->forElseCounter;
 
-        preg_match('/\( *(.*) +as *(.*)\)$/is', $expression, $matches);
+        preg_match('/\( *(.+) +as +(.+)\)$/is', $expression ?? '', $matches);
+
+        if (count($matches) === 0) {
+            throw new ViewCompilationException('Malformed @forelse statement.');
+        }
 
         $iteratee = trim($matches[1]);
 
@@ -35,12 +43,17 @@ trait CompilesLoops
     }
 
     /**
-     * Compile the for-else-empty statements into valid PHP.
+     * Compile the for-else-empty and empty statements into valid PHP.
      *
+     * @param  string  $expression
      * @return string
      */
-    protected function compileEmpty()
+    protected function compileEmpty($expression)
     {
+        if ($expression) {
+            return "<?php if(empty{$expression}): ?>";
+        }
+
         $empty = '$__empty_'.$this->forElseCounter--;
 
         return "<?php endforeach; \$__env->popLoop(); \$loop = \$__env->getLastLoop(); if ({$empty}): ?>";
@@ -52,6 +65,16 @@ trait CompilesLoops
      * @return string
      */
     protected function compileEndforelse()
+    {
+        return '<?php endif; ?>';
+    }
+
+    /**
+     * Compile the end-empty statements into valid PHP.
+     *
+     * @return string
+     */
+    protected function compileEndEmpty()
     {
         return '<?php endif; ?>';
     }
@@ -72,10 +95,16 @@ trait CompilesLoops
      *
      * @param  string  $expression
      * @return string
+     *
+     * @throws \Illuminate\Contracts\View\ViewCompilationException
      */
     protected function compileForeach($expression)
     {
-        preg_match('/\( *(.*) +as *(.*)\)$/is', $expression, $matches);
+        preg_match('/\( *(.+) +as +(.*)\)$/is', $expression ?? '', $matches);
+
+        if (count($matches) === 0) {
+            throw new ViewCompilationException('Malformed @foreach statement.');
+        }
 
         $iteratee = trim($matches[1]);
 

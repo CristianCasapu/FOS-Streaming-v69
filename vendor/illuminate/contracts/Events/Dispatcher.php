@@ -7,11 +7,11 @@ interface Dispatcher
     /**
      * Register an event listener with the dispatcher.
      *
-     * @param  string|array  $events
-     * @param  mixed  $listener
+     * @param  \Closure|string|array  $events
+     * @param  \Closure|string|array|null  $listener
      * @return void
      */
-    public function listen($events, $listener);
+    public function listen($events, $listener = null);
 
     /**
      * Determine if a given event has listeners.
@@ -30,16 +30,16 @@ interface Dispatcher
     public function subscribe($subscriber);
 
     /**
-     * Dispatch an event and call the listeners.
+     * Dispatch an event until the first non-null response is returned.
      *
      * @param  string|object  $event
      * @param  mixed  $payload
-     * @return array|null
+     * @return mixed
      */
     public function until($event, $payload = []);
 
     /**
-     * Fire an event until the first non-null response is returned.
+     * Dispatch an event and call the listeners.
      *
      * @param  string|object  $event
      * @param  mixed  $payload

@@ -3,12 +3,12 @@ class Stream extends FosStreaming {
 
     public function category()
     {
-        return $this->hasOne('Category', 'id', 'cat_id');
+        return $this->hasOne(Category::class, 'id', 'cat_id');
     }
 
     public function transcode()
     {
-        return $this->hasOne('Transcode', 'id', 'trans_id');
+        return $this->hasOne(Transcode::class, 'id', 'trans_id');
     }
 
     public function getStatusLabelAttribute()

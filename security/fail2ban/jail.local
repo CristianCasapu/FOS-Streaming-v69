@@ -1,0 +1,93 @@
+# Fail2Ban jail configuration for FOS-Streaming
+#
+# Installation:
+# cp jail.local /etc/fail2ban/jail.d/fos-streaming.local
+# systemctl restart fail2ban
+#
+# Configuration can be modified from FOS-Streaming admin panel
+
+[DEFAULT]
+# Ban settings (can be overridden per jail)
+bantime  = 3600        # Ban for 1 hour
+findtime = 600         # Look back 10 minutes
+maxretry = 5           # Allow 5 attempts
+backend = systemd      # Use systemd backend (Debian 12)
+
+# Action to take when banning
+banaction = ufw
+banaction_allports = ufw
+
+# Email notifications (configure if needed)
+# destemail = admin@yourdomain.com
+# sender = fail2ban@yourdomain.com
+# action = %(action_mwl)s
+
+#
+# FOS-Streaming Authentication Jail
+#
+[fos-auth]
+enabled  = true
+port     = 7777,8000
+protocol = tcp
+filter   = fos-auth
+logpath  = /home/fos-streaming/fos/logs/auth.log
+maxretry = 5
+findtime = 900        # 15 minutes
+bantime  = 3600       # 1 hour ban
+action   = ufw
+
+#
+# FOS-Streaming Security Events Jail
+#
+[fos-security]
+enabled  = true
+port     = 7777,8000
+protocol = tcp
+filter   = fos-security
+logpath  = /home/fos-streaming/fos/logs/security.log
+maxretry = 3          # Stricter - only 3 security violations
+findtime = 600        # 10 minutes
+bantime  = 7200       # 2 hour ban
+action   = ufw
+
+#
+# FOS-Streaming Nginx Jail
+#
+[fos-nginx]
+enabled  = true
+port     = 7777,8000,1935
+protocol = tcp
+filter   = fos-nginx
+logpath  = /home/fos-streaming/fos/logs/access.log
+          /home/fos-streaming/fos/logs/panel-access.log
+          /home/fos-streaming/fos/logs/streaming-access.log
+maxretry = 10         # More lenient for legitimate mistakes
+findtime = 600
+bantime  = 1800       # 30 minute ban
+action   = ufw
+
+#
+# Port Scanning Detection
+#
+[fos-portscan]
+enabled  = true
+port     = all
+protocol = tcp
+filter   = fos-portscan
+logpath  = /var/log/syslog
+maxretry = 5
+findtime = 300        # 5 minutes
+bantime  = 86400      # 24 hour ban for port scanners
+action   = ufw
+
+#
+# Aggressive Ban (for repeat offenders)
+#
+[fos-recidive]
+enabled  = true
+filter   = recidive
+logpath  = /var/log/fail2ban.log
+maxretry = 3
+findtime = 86400      # 24 hours
+bantime  = 604800     # 1 week ban for repeat offenders
+action   = ufw
